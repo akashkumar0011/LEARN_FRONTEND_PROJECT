@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta chareset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+<title>Interactive chessboard</title>
+<style>
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background-color:#1e1e1e;
+margin:0;
+font-family:arial,sans-serif;
+}
+.board-container{
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+h2{
+color:#ffffff;
+margin-bottom:15px;
+letter-spacing:1px;
+}
+#chessboard{
+display:grid;
+grid-template-columns:repeat(8,65px);
+grid-template-rows:repeat(8,65px);
+border:6px solid#3c2f2f;
+box-shadow:0 10px 25pxrgba(0,0,0,0.6);
+border-radius:4px;
+}
+.square{
+width:65px;
+height:65px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:38px;
+user-select:none;
+transition:background-color 0.2s;
+}
+.light{
+background-color:#ebecd0;
+}
+.dark{
+background-color:#739552;
+}
+.square:hover{
+filter:brightness(0.95);
+cursor:pointer;
+}
+</style>
+</head>
+<body>
+<div class="board-container">
+<h2> Chess Board</h2>
+<div id="chessboard"></div>
+</div>
+<script>
+const board=document.getElementById('chessboard');
+const initialSetup={
+0:['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'],
+1:['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+6:['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+7:['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'],
+};
+for(let row=0; row <8; row++){
+for(let col=0; col <8; col++){
+const square=document.createElement('div');
+square.classList.add('square');
+if((row+col)%2===0){
+square.classList.add('light');
+}
+else{
+square.classList.add('dark');
+}
+if(initialSetup[row]&& initialSetup[row][col]){
+square.textContent=initialSetup[row][col];
+}
+board.appendChild(square);
+}
+}
+</script>
+</body>
+</html>
