@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+<title>Animated Eyes Follow Mouse</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+background-color:#51a1e2;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+.face{
+position:relative;
+width:350px;
+height:350px;
+background:#ffffff;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+.eye{
+position:relative;
+width:90px;
+height:90px;
+background:#ffffff;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:inset 0 5px 10px rgba(0,0,0,0.1);
+}
+.ball{
+position:absolute;
+width:35px;
+height:35px;
+background:#000000;
+border-radius:50%;
+}
+</style>
+</head>
+<body>
+<!--Face Container-->
+<div class="face">
+<div class="eye">
+<div class="ball"></div>
+</div>
+<div class="eye">
+<div class="ball"></div>
+</div></div>
+<!--JavaScript code-->
+<script>
+document.addEventListener('mousemove',(event)=>{
+const eyes=document.querySelectorAll('.eye');
+eyes.forEach((eye)=>{
+const rect=eye.getBoundingClientRect();
+const eyeX=rect.left+rect.width/2;
+const eyeY=rect.top+rect.height/2;
+const radian=Math.atan2(event.clientY-eyeY,event.clientX-eyeX);
+const maxDistance=25; 
+const distanceX=Math.cos(radian)*maxDistance;
+const distanceY=Math.sin(radian)*maxDistance;
+const ball=eye.querySelector('.ball');
+ball.style.transform=`translate(${distanceX}px,${distanceY}px)`;
+});
+});
+</script>
+</body>
+</html>
