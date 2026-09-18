@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1.0">
+<title>Advanced Calculator</title>
+<style>
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+body{
+background-color:#f0f2f5;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+.calculator-container{
+display:flex;
+background:#fff;
+border-radius:12px;
+box-shadow:0 8px 24px rgba(0,0,0,0.15);
+overflow:hidden;
+max-width:600px;
+width:100%;
+}
+.calculator{
+background:#0066cc;
+padding:20px;
+width:350px;
+}
+.history-panel{
+width:220px;
+background:#f8f9fa;
+border-left:1px solid #ddd;
+padding:15px;
+overflow-y:auto;
+max-height:480px;
+}
+.history-panel h3{
+font-size:16px;
+margin-bottom:10px;
+color:#333;
+}
+.history-list{
+list-style:none;
+font-size:14px;
+color:#555;
+}
+.history-list li{
+margin-bottom:8px;
+border-bottom:1px dashed#ccc;
+padding-bottom:4px;
+}
+.display-box{
+background:#ffffff;
+padding:15px;
+border-radius:8px;
+margin-bottom:15px;
+text-align:right;
+}
+.history-screen{
+font-size:14px;
+color:#777;
+height:20px;
+overflow:hidden;
+}
+.main-screen{
+font-size:28px;
+font-weight:bold;
+color:#222;
+overflow-x:auto;
+}
+.buttons-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+}
+button{
+padding:15px;
+font-size:18px;
+font-weight:600;
+border:none;
+border-radius:6px;
+background:#e6f0ff;
+color:#004080;
+cursor:pointer;
+transition:background 0.2s;
+}
+button:hover{
+background:#cce0ff;
+}
+button.operator{
+background:#ff9900;
+color:#fff;
+}
+button.operator:hover{
+background:#e68a00;
+}
+button.action{
+background:#ff4d4d;
+color:#fff;
+}
+button.action:hover{
+background:#e60000;
+}
+button.equal{
+background:#00cc66;
+color:#fff;
+grid-column:span 2;
+}
+button.equal:hover{
+background:#00b359;
+}
+</style>
+</head>
+<body>
+<div class="calculator-container">
+<div class="calculator">
+<div class="display-box">
+<div class="history-screen" id="historyScreen"></div>
+<div class="main-screen" id="mainScreen">0</div>
+</div>
+<div class="buttons-grid">
+<button class="action"onclick="clearAll()">C</button>
+<button class="action"onclick="deleteChar()">⌫</button>
+<button class="operator"onclick="appendValue('%')">%</button>
+<button class="operator"onclick="appendValue('/')">/</button>
+<button onclick="appendValue('7')">7</button>
+<button onclick="appendValue('8')">8</button>
+<button onclick="appendValue('9')">9</button>
+<button class="operator"onclick="appendValue('*')">*</button>
+<button onclick="appendValue('4')">4</button>
+<button onclick="appendValue('5')">5</button>
+<button onclick="appendValue('6')">6</button>
+<button class="operator"onclick="appendValue('-')">-</button>
+<button onclick="appendValue('1')">1</button>
+<button onclick="appendValue('2')">2</button>
+<button onclick="appendValue('3')">3</button>
+<button class="operator"onclick="appendValue('+')">+</button>
+<button onclick="appendValue('0')">0</button>
+<button onclick="appendValue('.')">.</button>
+<button class="equal"onclick="calculate()">=</button>
+</div>
+</div>
+<div class="history-panel">
+<h3>History</h3>
+<ul class="history-list"id="historyList"></ul>
+</div>
+</div>
+<script>
+const mainScreen=document.getElementById('mainScreen');
+const historyScreen=document.getElementById('historyScreen');
+const historyList=document.getElementById('historyList');
+let currentInput='0';
+let calculationString='';
+function updateScreen(){
+mainScreen.innerText=currentInput;
+historyScreen.innerText=calculationString;
+}
+function appendValue(val){
+if(currentInput==='0'&& val!=='.'){
+currentInput=val;
+}else{
+currentInput+=val;
+}
+updateScreen();
+}
+function clearAll(){
+currentInput='0';
+calculationString='';
+updateScreen();
+}
+function deleteChar(){
+if(currentInput.length >1){
+currentInput=currentInput.slice(0,-1);
+}else{
+currentInput='0';
+}
+updateScreen();
+}
+function calculate(){
+try{
+calculationString = currentInput;
+let result = Function('return ' + currentInput)();
+currentInput=String(result);
+updateScreen();
+let listItem=document.createElement('li');
+listItem.innerText=`${calculationString} = ${result}`;
+historyList.prepend(listItem);
+calculationString='';
+}catch(error){
+currentInput='Error';
+updateScreen();
+setTimeout(clearAll,1500);
+}
+}
+document.addEventListener('keydown',function(event){
+const key=event.key;
+if(!isNaN(key)||key==='.'){
+appendValue(key);
+}else if(key==='+'||key==='-'||key==='*'||key==='/'||key==='%'){
+appendValue(key);
+}else if(key==='Enter'||key==='='){
+calculate();
+}else if(key==='Backspace'){
+deleteChar();
+}else if(key==='Escape'||key==='c'||key==='C'){
+clearAll();
+}
+});
+</script>
+</body>
+</html>
